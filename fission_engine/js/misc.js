@@ -12,6 +12,7 @@ var ceil = function(num)
 }
 var abs = Math.abs
 var sqrt = Math.sqrt
+var pi   = Math.PI
 
 var log = function(num)
 {
