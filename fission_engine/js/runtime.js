@@ -246,6 +246,31 @@
       return frame_number
     }
 
+    self.on = function(event_name, cb)
+    {
+      if ((typeof event_name) != 'string')
+      {
+        cb = event_name
+        event_name = 'runtime.frame_logic';
+      }
+      self.events.on(event_name, cb);
+    }
+
+    self.once = function(event_name, cb)
+    {
+      if ((typeof event_name) != 'string')
+      {
+        cb = event_name
+        event_name = 'runtime.frame_logic';
+      }
+      self.events.once(event_name, cb);
+    }
+
+    self.emit = function()
+    {
+      self.events.emit.apply(self.events, arguments);
+    }
+
     var name_match = /^(\w*)[.]?(.*)$/
     self.find_group = function(name)
     {
