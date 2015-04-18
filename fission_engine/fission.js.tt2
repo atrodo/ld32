@@ -84,7 +84,7 @@
         var _files = {};
 
         [% FOREACH dir IN [ "action", "layer", "logic", "state" ] %]
-          [% USE d = Directory("${basedir}/lib/${dir}") %]
+          [% SET d = root.subdir("/lib/${dir}") %]
           [% FOREACH file IN d.files %]
             [% IF file.path.match('(?xms) tt 2? $') %]
               [% undef = PROCESS "${file.path}" %]
@@ -96,7 +96,7 @@
             [%
               path = file.path
                 .remove("^${basedir}")
-                .remove('^lib/')
+                .remove('^/?lib/')
                 .remove('[.]js$')
             %]
 
