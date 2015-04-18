@@ -57,6 +57,11 @@
     }
 
     // * is
+    if (typeof attr.is != 'string')
+    {
+      die( "Moo: 'is' is required and must be a string" );
+    }
+
     attr.is = attr.is.toLowerCase();
     if (!(attr.is == 'rw' || attr.is == 'ro'))
     {
@@ -80,7 +85,6 @@
     }
 
     // * default
-    if ('default' in attr)
     {
       var default_typeof = typeof attr.default;
 
@@ -228,6 +232,11 @@
       };
 
       Object.seal(this);
+
+      if (isFunction(this.BUILD))
+      {
+        this.BUILD()
+      }
     };
 
     _new = {
