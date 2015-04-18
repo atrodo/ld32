@@ -1,4 +1,4 @@
-var seconds_match = /^(\d)*s$/;
+var seconds_match = /^(\d*)s$/;
 
 var Cooldown = Moo.class(function()
 {
@@ -75,7 +75,7 @@ var Cooldown = Moo.class(function()
 
   this.method("is_done", function()
   {
-    return this.frames >= this.total
+    return this.frames <= 0
   })
 
   this.method("get_remaining", function()
