@@ -1,6 +1,6 @@
 [%
   game = {
-    name  => "ld31"
+    name  => "ld32"
     author => "atrodo"
   }
   width  = 640
@@ -18,7 +18,7 @@
   debug        = 1
   show_map     = 0
   engine_input = 1
-  show_timings = 0
+  show_timings = 1
 
   tiles_bd = 0
   tiles_xw = 16
