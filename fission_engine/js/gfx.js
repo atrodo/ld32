@@ -62,12 +62,23 @@
           var y = anim.frame_y
 
           if (x == undefined)
-            x = ((anim.x - cou.x) * runtime.tiles.tiles_xw) + runtime.trans_x
+            x = anim.x - cou.x
           if (y == undefined)
-            y = ((anim.y - cou.y) * runtime.tiles.tiles_yh) + runtime.trans_y
+            y = anim.y - cou.y
+
+          if (x == undefined)
+            x = (anim.tile_x - cou.x) * runtime.tiles.tiles_xw
+          if (y == undefined)
+            y = (anim.tile_y - cou.y) * runtime.tiles.tiles_yh
 
           if (!img)
             return;
+
+          if (x == undefined || y == undefined)
+          {
+            warn("Could not determine x/y position")
+            return;
+          }
 
           if (!(img instanceof Gfx))
           {
@@ -194,12 +205,22 @@
 
     var preload_interval = window.setInterval(function()
     {
-      $.each(preload_list, function(i, func)
+      $.each(preload_list, function(i, item)
       {
-        if (func == undefined)
+        if (item == undefined)
           return;
 
-        func();
+        if (item.go != null)
+        {
+          item.go();
+          item.go = null;
+        }
+
+        if (item.promise.state() != 'resolved')
+        {
+          return
+        }
+
         preload_list[i] = null;
 
         progress.attr("value", i+1);
@@ -238,12 +259,15 @@
       }
 
       var img = $("<img/>")
-      preload_list.push(function() {
+      preload_list.push({
+        promise: result.promise(),
+        go: function() {
         img
           .load(loaded_img)
           .attr("src", "r/" + url)
           .appendTo(preload_div)
-        })
+        }
+      })
 
       progress.attr("max", preload_list.length);
 
