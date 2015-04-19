@@ -201,12 +201,28 @@
       runtime.events.emit('runtime.maintaince', get_cou())
     }
 
+    var mouseX = 0;
+    var mouseY = 0;
+    var mouse_re = /^mouse/;
+
+    var get_mouse_pos = function()
+    {
+      return {x: mouseX, y: mouseY}
+    }
+
     var current_drag_event
     var drag_props = [ 'buttons', 'clientX', 'clientY', 'currentTarget', 'movementX', 'movementY', 'revion', 'offsetX', 'offsetY', 'originalTarget', 'pageX', 'pageY', 'screenX', 'screenY', 'target', 'view', 'which' ];
 
     var input_listen = function(e)
     {
       e.preventDefault()
+
+      if (mouse_re.test(e.type))
+      {
+        var target_pos = $(e.currentTarget).position()
+        mouseX = e.pageX - target_pos.left
+        mouseY = e.pageY - target_pos.top
+      }
 
       self.foreach_active_layer(function(layer)
       {
@@ -292,6 +308,8 @@
     {
       return frame_number
     }
+
+    self.get_mouse_pos = get_mouse_pos
 
     self.on = function(event_name, cb)
     {
