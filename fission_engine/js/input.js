@@ -555,23 +555,17 @@ function Input(options)
       "keydown": function(e)
       {
         var key = nice_name(e)
-
-        e.preventDefault();
         self.activate_action(key, triggers.kb)
       },
 
       "keyup": function(e)
       {
         var key = nice_name(e)
-
-        e.preventDefault();
         self.deactivate_action(key, triggers.kb)
       },
 
       "click": function(e)
       {
-        warn(e);
-
         var target_pos = $(e.currentTarget).position()
         var x = e.pageX - target_pos.left
         var y = e.pageY - target_pos.top
@@ -642,7 +636,7 @@ function ActionGroup(options)
 
   self.get = function(i)
   {
-    return data[i]
+    return self[i]
   }
 
   self.get_current = function()
