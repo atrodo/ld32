@@ -201,6 +201,9 @@
       runtime.events.emit('runtime.maintaince', get_cou())
     }
 
+    var current_drag_event
+    var drag_props = [ 'buttons', 'clientX', 'clientY', 'currentTarget', 'movementX', 'movementY', 'revion', 'offsetX', 'offsetY', 'originalTarget', 'pageX', 'pageY', 'screenX', 'screenY', 'target', 'view', 'which' ];
+
     var input_listen = function(e)
     {
       e.preventDefault()
@@ -209,10 +212,54 @@
       {
         layer.process_event(e)
       })
+
+      var drag_data
+      var do_drag_event = function(event_name)
+      {
+        if (drag_data == null)
+        {
+          drag_data = {}
+          $.each(drag_props, function() { drag_data[this] = e[this] });
+        }
+
+        var drag_event = $.Event(event_name, drag_data)
+        self.foreach_active_layer(function(layer)
+        {
+          layer.process_event(drag_event)
+        })
+      }
+
+      // Convert a mousemove into a drag
+      if (e.type == 'mousemove' && e.buttons & 1 == 1)
+      {
+        if (!current_drag_event)
+        {
+          do_drag_event('dragstart')
+          current_drag_event = true
+        }
+
+        do_drag_event('drag')
+      }
+      else if (current_drag_event)
+      {
+        if (e.type == 'mouseup')
+        {
+          do_drag_event('dragend')
+          current_drag_event = false
+        }
+        if (e.type == 'mousemove')
+        {
+          do_drag_event('dragcancel')
+          current_drag_event = false
+        }
+      }
     }
 
     $(document).bind("keydown keyup", input_listen)
-    $(stage.canvas).bind("click", input_listen)
+    $(stage.canvas)
+      .bind("click", input_listen)
+      .bind("mouseenter mouseleave", input_listen)
+      .bind("mousedown mouseup mousemove", input_listen)
 
     var maintain_interval
     var phys_interval
